@@ -7,10 +7,14 @@ import java.util.Locale;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.HopperMinecart;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,6 +28,7 @@ import net.coreprotect.config.ConfigHandler;
 import net.coreprotect.consumer.Queue;
 import net.coreprotect.database.logger.ItemLogger;
 import net.coreprotect.model.BlockGroup;
+import net.coreprotect.utility.EntityUtils;
 import net.coreprotect.utility.ItemUtils;
 
 public final class PlayerInteractEntityListener extends Queue implements Listener {
@@ -109,6 +114,33 @@ public final class PlayerInteractEntityListener extends Queue implements Listene
                 ItemStack addItem = allayItem.clone();
                 addItem.setAmount(1);
                 CraftItemListener.logCraftedItem(player.getLocation(), player.getName(), addItem, ItemLogger.ITEM_BUY);
+            }
+        }
+        else if (!event.isCancelled() && (entity instanceof StorageMinecart || entity instanceof HopperMinecart || entity instanceof Boat)) {
+            // Log right-click interaction on container entities (hopper minecarts, chest boats)
+            if (!Config.getConfig(player.getWorld()).PLAYER_INTERACTIONS) {
+                return;
+            }
+
+            Material entityMaterial = EntityUtils.getEntityMaterial(entity.getType());
+            if (entityMaterial != null) {
+                Queue.queuePlayerInteraction(player.getName(), entity.getLocation().getBlock().getState(), entityMaterial);
+            }
+        }
+        else if (!event.isCancelled() && entity instanceof ChestedHorse) {
+            // Log right-click interaction on chested animals (llamas, donkeys, mules with chests)
+            ChestedHorse chestedHorse = (ChestedHorse) entity;
+            if (!chestedHorse.isCarryingChest()) {
+                return; // Only log if they're actually carrying a chest
+            }
+            
+            if (!Config.getConfig(player.getWorld()).PLAYER_INTERACTIONS) {
+                return;
+            }
+
+            Material entityMaterial = EntityUtils.getEntityMaterial(entity.getType());
+            if (entityMaterial != null) {
+                Queue.queuePlayerInteraction(player.getName(), entity.getLocation().getBlock().getState(), entityMaterial);
             }
         }
     }

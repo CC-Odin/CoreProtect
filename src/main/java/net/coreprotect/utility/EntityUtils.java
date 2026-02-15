@@ -78,6 +78,33 @@ public class EntityUtils extends Queue {
                 return Material.SNOWBALL;
             case "WIND_CHARGE":
                 return Material.valueOf("WIND_CHARGE");
+            case "MINECART_CHEST":
+            case "CHEST_MINECART":
+                return Material.CHEST_MINECART;
+            case "MINECART_HOPPER":
+            case "HOPPER_MINECART":
+                return Material.HOPPER_MINECART;
+            case "OAK_CHEST_BOAT":
+            case "SPRUCE_CHEST_BOAT":
+            case "BIRCH_CHEST_BOAT":
+            case "JUNGLE_CHEST_BOAT":
+            case "ACACIA_CHEST_BOAT":
+            case "DARK_OAK_CHEST_BOAT":
+            case "MANGROVE_CHEST_BOAT":
+            case "CHERRY_CHEST_BOAT":
+            case "BAMBOO_CHEST_RAFT":
+                try {
+                    return Material.valueOf(type.name());
+                }
+                catch (IllegalArgumentException e) {
+                    return Material.CHEST; // fallback for older versions
+                }
+            case "LLAMA":
+                return Material.LLAMA_SPAWN_EGG; // Llamas with chests
+            case "DONKEY":
+                return Material.DONKEY_SPAWN_EGG; // Donkeys with chests
+            case "MULE":
+                return Material.MULE_SPAWN_EGG; // Mules with chests
             default:
                 return BukkitAdapter.ADAPTER.getFrameType(type);
         }

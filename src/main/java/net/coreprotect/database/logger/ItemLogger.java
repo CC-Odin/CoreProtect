@@ -37,6 +37,8 @@ public class ItemLogger {
     public static final int ITEM_CREATE = 10;
     public static final int ITEM_SELL = 11;
     public static final int ITEM_BUY = 12;
+    public static final int ITEM_REMOVE_ENTITY = 1001;
+    public static final int ITEM_ADD_ENTITY = 1002;
 
     private ItemLogger() {
         throw new IllegalStateException("Database class");

@@ -414,12 +414,14 @@ public class LookupRaw extends Queue {
                             if (actionTarget == ItemLogger.ITEM_REMOVE) {
                                 actionText.append(",").append(ItemLogger.ITEM_PICKUP);
                                 actionText.append(",").append(ItemLogger.ITEM_REMOVE_ENDER);
+                                actionText.append(",").append(ItemLogger.ITEM_REMOVE_ENTITY);
                                 actionText.append(",").append(ItemLogger.ITEM_CREATE);
                                 actionText.append(",").append(ItemLogger.ITEM_BUY);
                             }
                             if (actionTarget == ItemLogger.ITEM_ADD) {
                                 actionText.append(",").append(ItemLogger.ITEM_DROP);
                                 actionText.append(",").append(ItemLogger.ITEM_ADD_ENDER);
+                                actionText.append(",").append(ItemLogger.ITEM_ADD_ENTITY);
                                 actionText.append(",").append(ItemLogger.ITEM_THROW);
                                 actionText.append(",").append(ItemLogger.ITEM_SHOOT);
                                 actionText.append(",").append(ItemLogger.ITEM_BREAK);
@@ -427,15 +429,17 @@ public class LookupRaw extends Queue {
                                 actionText.append(",").append(ItemLogger.ITEM_SELL);
                             }
                         }
-                        // If just looking up drops/pickups, include ender chest transactions
+                        // If just looking up drops/pickups, include ender chest and entity container transactions
                         else if (actionList.contains(11) && !actionList.contains(4)) {
                             if (actionTarget == ItemLogger.ITEM_DROP) {
                                 actionText.append(",").append(ItemLogger.ITEM_ADD_ENDER);
+                                actionText.append(",").append(ItemLogger.ITEM_ADD_ENTITY);
                                 actionText.append(",").append(ItemLogger.ITEM_THROW);
                                 actionText.append(",").append(ItemLogger.ITEM_SHOOT);
                             }
                             if (actionTarget == ItemLogger.ITEM_PICKUP) {
                                 actionText.append(",").append(ItemLogger.ITEM_REMOVE_ENDER);
+                                actionText.append(",").append(ItemLogger.ITEM_REMOVE_ENTITY);
                             }
                         }
                     }

@@ -34,6 +34,16 @@ public class ContainerLogger extends Queue {
         throw new IllegalStateException("Database class");
     }
 
+    private static boolean isEntityContainerMaterial(Material type) {
+        if (type == null) {
+            return false;
+        }
+        String name = type.name();
+        return name.equals("CHEST_MINECART") || name.equals("HOPPER_MINECART") 
+            || name.endsWith("_CHEST_BOAT") || name.equals("BAMBOO_CHEST_RAFT")
+            || name.equals("LLAMA_SPAWN_EGG") || name.equals("DONKEY_SPAWN_EGG") || name.equals("MULE_SPAWN_EGG");
+    }
+
     public static void log(PreparedStatement preparedStmtContainer, PreparedStatement preparedStmtItems, int batchCount, String player, Material type, Object container, Location location) {
         try {
             ItemStack[] contents = null;
@@ -190,13 +200,20 @@ public class ContainerLogger extends Queue {
             ItemUtils.mergeItems(type, oldInventory);
             ItemUtils.mergeItems(type, newInventory);
 
-            if (type != Material.ENDER_CHEST) {
+            boolean isEntityContainer = isEntityContainerMaterial(type);
+            if (type != Material.ENDER_CHEST && !isEntityContainer) {
                 logTransaction(preparedStmtContainer, batchCount, player, type, faceData, oldInventory, 0, location);
                 logTransaction(preparedStmtContainer, batchCount, player, type, faceData, newInventory, 1, location);
             }
-            else { // pass ender chest transactions to item logger
+            else if (type == Material.ENDER_CHEST) {
+                // pass ender chest transactions to item logger
                 ItemLogger.logTransaction(preparedStmtItems, batchCount, 0, player, location, oldInventory, ItemLogger.ITEM_REMOVE_ENDER);
                 ItemLogger.logTransaction(preparedStmtItems, batchCount, 0, player, location, newInventory, ItemLogger.ITEM_ADD_ENDER);
+            }
+            else {
+                // pass entity container transactions to item logger
+                ItemLogger.logTransaction(preparedStmtItems, batchCount, 0, player, location, oldInventory, ItemLogger.ITEM_REMOVE_ENTITY);
+                ItemLogger.logTransaction(preparedStmtItems, batchCount, 0, player, location, newInventory, ItemLogger.ITEM_ADD_ENTITY);
             }
 
             oldList.remove(0);

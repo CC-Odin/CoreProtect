@@ -301,6 +301,9 @@ public class RollbackProcessor {
                         else if (rowAction == ItemLogger.ITEM_REMOVE_ENDER || rowAction == ItemLogger.ITEM_ADD_ENDER) {
                             inventoryAction = (rowAction == ItemLogger.ITEM_REMOVE_ENDER ? 1 : 0);
                         }
+                        else if (rowAction == ItemLogger.ITEM_REMOVE_ENTITY || rowAction == ItemLogger.ITEM_ADD_ENTITY) {
+                            inventoryAction = (rowAction == ItemLogger.ITEM_REMOVE_ENTITY ? 1 : 0);
+                        }
                         else {
                             inventoryAction = (rowAction == ItemLogger.ITEM_REMOVE ? 1 : 0);
                         }
