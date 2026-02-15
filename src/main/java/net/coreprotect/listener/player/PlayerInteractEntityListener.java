@@ -21,6 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import net.coreprotect.config.Config;
@@ -116,7 +117,7 @@ public final class PlayerInteractEntityListener extends Queue implements Listene
                 CraftItemListener.logCraftedItem(player.getLocation(), player.getName(), addItem, ItemLogger.ITEM_BUY);
             }
         }
-        else if (!event.isCancelled() && (entity instanceof StorageMinecart || entity instanceof HopperMinecart || entity instanceof Boat)) {
+        else if (!event.isCancelled() && (entity instanceof StorageMinecart || entity instanceof HopperMinecart || (entity instanceof Boat && entity instanceof InventoryHolder))) {
             // Log right-click interaction on container entities (hopper minecarts, chest boats)
             if (!Config.getConfig(player.getWorld()).PLAYER_INTERACTIONS) {
                 return;

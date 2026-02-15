@@ -35,24 +35,14 @@ public class Validate {
             return true; // Chest minecart and hopper minecart
         }
         if (inventoryHolder instanceof Boat) {
-            try {
-                // Check if it's a chest boat (1.19+)
-                // Chest boats implement InventoryHolder in newer versions
-                return true;
-            }
-            catch (Exception e) {
-                return false;
-            }
+            // If a Boat implements InventoryHolder, it must be a chest boat (1.19+)
+            // Regular boats don't implement InventoryHolder
+            return true;
         }
         if (inventoryHolder instanceof ChestedHorse) {
-            try {
-                // Donkeys, mules, llamas - only log if they're carrying a chest
-                ChestedHorse chestedHorse = (ChestedHorse) inventoryHolder;
-                return chestedHorse.isCarryingChest();
-            }
-            catch (Exception e) {
-                return false;
-            }
+            // Donkeys, mules, llamas - only log if they're carrying a chest
+            ChestedHorse chestedHorse = (ChestedHorse) inventoryHolder;
+            return chestedHorse.isCarryingChest();
         }
         return false;
     }
