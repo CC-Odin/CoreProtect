@@ -73,7 +73,9 @@ import net.coreprotect.CoreProtect;
 import net.coreprotect.bukkit.BukkitAdapter;
 import net.coreprotect.config.Config;
 import net.coreprotect.consumer.Queue;
+import net.coreprotect.database.Database;
 import net.coreprotect.thread.Scheduler;
+import net.coreprotect.utility.EntityUtils;
 import net.coreprotect.utility.serialize.ItemMetaHandler;
 
 public final class EntityDeathListener extends Queue implements Listener {
@@ -256,6 +258,17 @@ public final class EntityDeathListener extends Queue implements Listener {
 
         if (e.startsWith("#lightning")) {
             e = "#lightning";
+        }
+
+        // Log inventory drops for chested animals (llamas, donkeys, mules)
+        if (entity instanceof ChestedHorse && e.length() > 0 && Config.getConfig(entity.getWorld()).ITEM_TRANSACTIONS) {
+            ChestedHorse chestedHorse = (ChestedHorse) entity;
+            if (chestedHorse.isCarryingChest()) {
+                Material entityMaterial = EntityUtils.getEntityMaterial(entity.getType());
+                if (entityMaterial != null) {
+                    Database.containerBreakCheck(e, entityMaterial, entity, null, entity.getLocation());
+                }
+            }
         }
 
         if (e.length() > 0) {

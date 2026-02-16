@@ -228,7 +228,10 @@ public class ItemUtils {
 
     public static ItemStack[] getContainerContents(Material type, Object container, Location location) {
         ItemStack[] contents = null;
-        if (Config.getConfig(location.getWorld()).ITEM_TRANSACTIONS && BlockGroup.CONTAINERS.contains(type)) {
+        boolean isEntityContainer = Validate.isEntityContainerMaterial(type);
+        boolean isContainer = BlockGroup.CONTAINERS.contains(type) || isEntityContainer;
+        
+        if (Config.getConfig(location.getWorld()).ITEM_TRANSACTIONS && isContainer) {
             try {
                 // container may be null if called from within WorldEdit logger
                 if (container == null) {
@@ -245,6 +248,12 @@ public class ItemUtils {
                 else if (type == Material.ITEM_FRAME) {
                     ItemFrame entity = (ItemFrame) container;
                     contents = getItemFrameItem(entity);
+                }
+                else if (isEntityContainer) {
+                    Inventory inventory = EntityUtils.getEntityContainerInventory(container);
+                    if (inventory != null) {
+                        contents = inventory.getContents();
+                    }
                 }
                 else if (type == Material.JUKEBOX) {
                     org.bukkit.block.Jukebox blockState = (org.bukkit.block.Jukebox) ((Block) container).getState();

@@ -28,6 +28,7 @@ import net.coreprotect.utility.Chat;
 import net.coreprotect.utility.Color;
 import net.coreprotect.utility.ItemUtils;
 import net.coreprotect.utility.MaterialUtils;
+import net.coreprotect.utility.Validate;
 
 public class Database extends Queue {
 
@@ -134,7 +135,9 @@ public class Database extends Queue {
     }
 
     public static void containerBreakCheck(String user, Material type, Object container, ItemStack[] contents, Location location) {
-        if (BlockGroup.CONTAINERS.contains(type) && !BlockGroup.SHULKER_BOXES.contains(type)) {
+        boolean isContainer = BlockGroup.CONTAINERS.contains(type) || Validate.isEntityContainerMaterial(type);
+        
+        if (isContainer && !BlockGroup.SHULKER_BOXES.contains(type)) {
             if (Config.getConfig(location.getWorld()).ITEM_TRANSACTIONS) {
                 try {
                     if (contents == null) {

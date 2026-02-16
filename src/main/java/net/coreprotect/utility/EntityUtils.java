@@ -3,7 +3,13 @@ package net.coreprotect.utility;
 import java.util.Locale;
 
 import org.bukkit.Material;
+import org.bukkit.entity.AbstractArrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.projectiles.ProjectileSource;
 
 import net.coreprotect.bukkit.BukkitAdapter;
 import net.coreprotect.config.ConfigHandler;
@@ -78,12 +84,32 @@ public class EntityUtils extends Queue {
                 return Material.SNOWBALL;
             case "WIND_CHARGE":
                 return Material.valueOf("WIND_CHARGE");
+            case "MINECART":
+                return Material.MINECART;
             case "MINECART_CHEST":
             case "CHEST_MINECART":
                 return Material.CHEST_MINECART;
             case "MINECART_HOPPER":
             case "HOPPER_MINECART":
                 return Material.HOPPER_MINECART;
+            case "MINECART_TNT":
+            case "TNT_MINECART":
+                return Material.TNT_MINECART;
+            case "MINECART_FURNACE":
+            case "FURNACE_MINECART":
+                return Material.FURNACE_MINECART;
+            case "MINECART_COMMAND":
+            case "COMMAND_BLOCK_MINECART":
+                return Material.COMMAND_BLOCK_MINECART;
+            case "OAK_BOAT":
+            case "SPRUCE_BOAT":
+            case "BIRCH_BOAT":
+            case "JUNGLE_BOAT":
+            case "ACACIA_BOAT":
+            case "DARK_OAK_BOAT":
+            case "MANGROVE_BOAT":
+            case "CHERRY_BOAT":
+            case "BAMBOO_RAFT":
             case "OAK_CHEST_BOAT":
             case "SPRUCE_CHEST_BOAT":
             case "BIRCH_CHEST_BOAT":
@@ -97,7 +123,7 @@ public class EntityUtils extends Queue {
                     return Material.valueOf(type.name());
                 }
                 catch (IllegalArgumentException e) {
-                    return Material.CHEST; // fallback for older versions
+                    return null;
                 }
             case "LLAMA":
                 return Material.LLAMA_SPAWN_EGG; // Llamas with chests
@@ -117,6 +143,40 @@ public class EntityUtils extends Queue {
             entityName = ConfigHandler.entitiesReversed.get(id);
         }
         return entityName;
+    }
+
+    /* Resolve the player name from an attacker entity (direct hit or arrow shooter) */
+    public static String resolveAttacker(Entity attacker) {
+        if (attacker instanceof Player) {
+            return ((Player) attacker).getName();
+        }
+        if (attacker instanceof AbstractArrow) {
+            ProjectileSource shooter = ((AbstractArrow) attacker).getShooter();
+            if (shooter instanceof Player) {
+                return ((Player) shooter).getName();
+            }
+        }
+        return "";
+    }
+
+    /* Get the inventory of an entity container (chest boats, hopper/chest minecarts, chested horses) */
+    public static Inventory getEntityContainerInventory(Object container) {
+        Inventory inventory = null;
+        try {
+            if (container instanceof org.bukkit.entity.ChestedHorse) {
+                org.bukkit.entity.ChestedHorse chestedHorse = (org.bukkit.entity.ChestedHorse) container;
+                if (chestedHorse.isCarryingChest()) {
+                    inventory = chestedHorse.getInventory();
+                }
+            }
+            else if (container instanceof InventoryHolder) {
+                inventory = ((InventoryHolder) container).getInventory();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inventory;
     }
 
     public static EntityType getEntityType(int id) {

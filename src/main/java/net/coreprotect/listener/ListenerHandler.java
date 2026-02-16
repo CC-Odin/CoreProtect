@@ -27,9 +27,11 @@ import net.coreprotect.listener.entity.EntityDeathListener;
 import net.coreprotect.listener.entity.EntityExplodeListener;
 import net.coreprotect.listener.entity.EntityInteractListener;
 import net.coreprotect.listener.entity.EntityPickupItemListener;
+import net.coreprotect.listener.entity.EntityPlaceListener;
 import net.coreprotect.listener.entity.HangingBreakByEntityListener;
 import net.coreprotect.listener.entity.HangingBreakListener;
 import net.coreprotect.listener.entity.HangingPlaceListener;
+import net.coreprotect.listener.entity.VehicleDestroyListener;
 import net.coreprotect.listener.player.ArmorStandManipulateListener;
 import net.coreprotect.listener.player.CraftItemListener;
 import net.coreprotect.listener.player.FoodLevelChangeListener;
@@ -112,9 +114,11 @@ public final class ListenerHandler {
         pluginManager.registerEvents(new EntityExplodeListener(), plugin);
         pluginManager.registerEvents(new EntityInteractListener(), plugin);
         pluginManager.registerEvents(new EntityPickupItemListener(), plugin);
+        pluginManager.registerEvents(new EntityPlaceListener(), plugin);
         pluginManager.registerEvents(new HangingPlaceListener(), plugin);
         pluginManager.registerEvents(new HangingBreakListener(), plugin);
         pluginManager.registerEvents(new HangingBreakByEntityListener(), plugin);
+        pluginManager.registerEvents(new VehicleDestroyListener(), plugin);
 
         // Paper Listeners / Fallbacks (Player Listeners)
         try {

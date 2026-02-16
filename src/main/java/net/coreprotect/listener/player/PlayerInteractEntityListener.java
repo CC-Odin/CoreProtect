@@ -130,13 +130,13 @@ public final class PlayerInteractEntityListener extends Queue implements Listene
         }
         else if (!event.isCancelled() && entity instanceof ChestedHorse) {
             // Log right-click interaction on chested animals (llamas, donkeys, mules with chests)
+            if (!Config.getConfig(player.getWorld()).PLAYER_INTERACTIONS) {
+                return;
+            }
+
             ChestedHorse chestedHorse = (ChestedHorse) entity;
             if (!chestedHorse.isCarryingChest()) {
                 return; // Only log if they're actually carrying a chest
-            }
-            
-            if (!Config.getConfig(player.getWorld()).PLAYER_INTERACTIONS) {
-                return;
             }
 
             Material entityMaterial = EntityUtils.getEntityMaterial(entity.getType());

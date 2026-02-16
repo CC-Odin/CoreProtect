@@ -25,6 +25,7 @@ import net.coreprotect.event.CoreProtectPreLogEvent;
 import net.coreprotect.utility.BlockUtils;
 import net.coreprotect.utility.ItemUtils;
 import net.coreprotect.utility.MaterialUtils;
+import net.coreprotect.utility.Validate;
 import net.coreprotect.utility.WorldUtils;
 import net.coreprotect.utility.serialize.ItemMetaHandler;
 
@@ -34,15 +35,7 @@ public class ContainerLogger extends Queue {
         throw new IllegalStateException("Database class");
     }
 
-    private static boolean isEntityContainerMaterial(Material type) {
-        if (type == null) {
-            return false;
-        }
-        String name = type.name();
-        return name.equals("CHEST_MINECART") || name.equals("HOPPER_MINECART") 
-            || name.endsWith("_CHEST_BOAT") || name.equals("BAMBOO_CHEST_RAFT")
-            || name.equals("LLAMA_SPAWN_EGG") || name.equals("DONKEY_SPAWN_EGG") || name.equals("MULE_SPAWN_EGG");
-    }
+
 
     public static void log(PreparedStatement preparedStmtContainer, PreparedStatement preparedStmtItems, int batchCount, String player, Material type, Object container, Location location) {
         try {
@@ -200,7 +193,7 @@ public class ContainerLogger extends Queue {
             ItemUtils.mergeItems(type, oldInventory);
             ItemUtils.mergeItems(type, newInventory);
 
-            boolean isEntityContainer = isEntityContainerMaterial(type);
+            boolean isEntityContainer = Validate.isEntityContainerMaterial(type);
             if (type != Material.ENDER_CHEST && !isEntityContainer) {
                 logTransaction(preparedStmtContainer, batchCount, player, type, faceData, oldInventory, 0, location);
                 logTransaction(preparedStmtContainer, batchCount, player, type, faceData, newInventory, 1, location);

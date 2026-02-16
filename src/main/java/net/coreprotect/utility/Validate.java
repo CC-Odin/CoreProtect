@@ -1,5 +1,6 @@
 package net.coreprotect.utility;
 
+import org.bukkit.Material;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Hopper;
@@ -45,6 +46,32 @@ public class Validate {
             return chestedHorse.isCarryingChest();
         }
         return false;
+    }
+    
+    /* check if material represents an entity container (for logging purposes) */
+    public static boolean isEntityContainerMaterial(Material type) {
+        if (type == null) {
+            return false;
+        }
+        switch (type.name()) {
+            case "CHEST_MINECART":
+            case "HOPPER_MINECART":
+            case "OAK_CHEST_BOAT":
+            case "SPRUCE_CHEST_BOAT":
+            case "BIRCH_CHEST_BOAT":
+            case "JUNGLE_CHEST_BOAT":
+            case "ACACIA_CHEST_BOAT":
+            case "DARK_OAK_CHEST_BOAT":
+            case "MANGROVE_CHEST_BOAT":
+            case "CHERRY_CHEST_BOAT":
+            case "BAMBOO_CHEST_RAFT":
+            case "LLAMA_SPAWN_EGG":
+            case "DONKEY_SPAWN_EGG":
+            case "MULE_SPAWN_EGG":
+                return true;
+            default:
+                return false;
+        }
     }
 
 }
